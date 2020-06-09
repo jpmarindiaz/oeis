@@ -7,11 +7,18 @@ get_sequence <- function(A){
   }
   seq_b_url <- paste0("https://oeis.org/", A,"/",
                       paste0(gsub("A","b",A), ".txt"))
-  seq <- read_delim(seq_b_url, delim = " ", col_names = FALSE,
+  seq <- readr::read_delim(seq_b_url, delim = " ", col_names = FALSE,
                     comment = "#", col_types = "cc")
   names(seq) <- c("n", "a")
   seq
 }
+
+#' @export
+as_numbers <- function(seq){
+  seq %>%
+    dplyr::mutate(dplyr::across(where(is.character), as.numeric))
+}
+
 
 #' @export
 search_sequence <- function(keyword){

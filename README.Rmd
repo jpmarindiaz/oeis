@@ -1,0 +1,71 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# oeis
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of oeis is to provide access to integer sequences from http://oeis.org and some to include some helper functions to ease analysis on the sequences.
+
+## Installation
+
+You can install the development version with:
+
+```
+install.packages("remotes")
+remotes::install_github("jpmarindiaz/oeis")
+```
+
+## List and get OEIS sequences
+
+
+
+List all available sequences with `sequences`
+
+```{r}
+library(oeis)
+
+head(sequences)
+
+```
+
+Search for a sequence by some term in the sequence description.
+
+```
+search_sequence("prime numbers")
+# Returns 973 sequences with "prime numbers" in the description
+```
+
+
+Download a sequence
+
+```{r}
+a1 <- get_sequence("A306302")
+a2 <- get_sequence("A331766")
+#a3 <- get_sequence("A999999") # Error. Sequence not in catalog.
+```
+
+## Fitting models to sequences
+
+TODO
+Work in progress!
+
+
+```{r fit}
+# Fit polynomials
+# Find best polynomial order
+```
+

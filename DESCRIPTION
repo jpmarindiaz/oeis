@@ -1,20 +1,24 @@
 Package: oeis
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: OEIS interface
+Version: 0.0.0.9
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Juan Pablo",
+           family = "Marin Diaz",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+           email = "jpmarindiaz@gmail.com")
+Maintainer: Juan Pablo Marin Diaz <jpmarindiaz@gmail.com>
+Description: R interface for OEIS (http://oeis.org) 
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
-Depends: 
-    R (>= 2.10)
+Depends:
+    R (>= 3.1)
+Imports: 
+    tidyverse
 Suggests: 
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

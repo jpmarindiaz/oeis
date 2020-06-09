@@ -1,67 +1,70 @@
 test_that("more seqs",{
 
-  x <- get_sequence("A058254")
+  library(tidyverse)
 
-
-
-#
-#   fitModel # mosaic package
-#   nls
-#   lm(y~x)
-#   lm(y~poly(x,3,raw=TRUE))
-
-
-  # p <- plot(x,y,pch=19)
-  # nlsFit <- nls(y ~b1*x^3-b2*x^2+b3*x+b4,start=list(b1 = 1,b2 = 3,b3 = 1,b4 = 1))
-  # newdata <- data.frame(x = seq(min(x),max(x),len=100))
-  # predictLine <- lines(newdata$x,predict(nlsFit,newdata=newdata),col="red")
-  # print(predictLine)
-
-  # sigmoid models
-  # https://www.rdocumentation.org/packages/mixtox/versions/1.3/topics/curveFit
-
-
-  # https://stackoverflow.com/questions/14190883/fitting-a-curve-to-specific-data
-  models <- list(lm(y ~ x, data = dat),
-                 lm(y ~ I(1 / x), data = dat),
-                 lm(y ~ log(x), data = dat),
-                 nls(y ~ I(1 / x * a) + b * x, data = dat, start = list(a = 1, b = 1)),
-                 nls(y ~ (a + b * log(x)), data = dat, start = setNames(coef(lm(y ~ log(x), data = dat)), c("a", "b"))),
-                 nls(y ~ I(exp(1) ^ (a + b * x)), data = dat, start = list(a = 0,b = 0)),
-                 nls(y ~ I(1 / x * a) + b, data = dat, start = list(a = 1,b = 1))
+  s <- tibble(
+    n = 1:20,
+    a = (1:20)^2
   )
-
-  # have a quick look at the visual fit of these models
-  library(ggplot2)
-  ggplot(dat, aes(x, y)) + geom_point(size = 5) +
-    stat_smooth(method = lm, formula = as.formula(models[[1]]), size = 1, se = FALSE, color = "black") +
-    stat_smooth(method = lm, formula = as.formula(models[[2]]), size = 1, se = FALSE, color = "blue") +
-    stat_smooth(method = lm, formula = as.formula(models[[3]]), size = 1, se = FALSE, color = "yellow") +
-    stat_smooth(method = nls, formula = as.formula(models[[4]]), data = dat, method.args = list(start = list(a = 0,b = 0)), size = 1, se = FALSE, color = "red", linetype = 2) +
-    stat_smooth(method = nls, formula = as.formula(models[[5]]), data = dat, method.args = list(start = setNames(coef(lm(y ~ log(x), data = dat)), c("a", "b"))), size = 1, se = FALSE, color = "green", linetype = 2) +
-    stat_smooth(method = nls, formula = as.formula(models[[6]]), data = dat, method.args = list(start = list(a = 0,b = 0)), size = 1, se = FALSE, color = "violet") +
-    stat_smooth(method = nls, formula = as.formula(models[[7]]), data = dat, method.args = list(start = list(a = 0,b = 0)), size = 1, se = FALSE, color = "orange", linetype = 2)
+  seq_fit <- fit_poly(s, order = 1)
+  fit_plot(seq_fit$seq)
+  fit_eqn(seq_fit$fit) # -77 + 21*n
+  fit_error(seq_fit$fit)
+  seq_fit <- fit_poly(s, order = 2)
+  fit_plot(seq_fit$seq)
+  fit_eqn(seq_fit$fit) # n^2
+  fit_error(seq_fit$fit)
 
 
 
-  # symbolic regression using Genetic Programming
-  # http://rsymbolic.org/projects/rgp/wiki/Symbolic_Regression
-  library(rgp)
-  # this will probably take some time and throw
-  # a lot of warnings...
-  result1 <- symbolicRegression(y ~ x,
-                                data=dat, functionSet=mathFunctionSet,
-                                stopCondition=makeStepsStopCondition(2000))
-  # inspect results, they'll be different every time...
-  (symbreg <- result1$population[[which.min(sapply(result1$population, result1$fitnessFunction))]])
+  seq <- get_sequence("A306302")
+  s <- as_numbers(seq)
 
-  function (x)
-    tan((x - x + tan(x)) * x)
-  # quite bizarre...
+  seq_fit <- fit_poly(s, order = 2)
+  fit_plot(seq_fit$seq)
+  fit_eqn(seq_fit$fit) # 13024707102.1254 - 139292886.518236*n + 261517.896747814*n^2
+  fit_error(seq_fit$fit)
+  seq_fit <- fit_poly(s, order = 3)
+  fit_plot(seq_fit$seq)
+  fit_eqn(seq_fit$fit) # -2158093792.35926 + 43357273.3206148*n - 195335.77740183*n^2 + 304.569116099763*n^3
+  fit_error(seq_fit$fit)
+  seq_fit <- fit_poly(s, order = 4)
+  fit_plot(seq_fit$seq)
+  fit_eqn(seq_fit$fit)
+  fit_error(seq_fit$fit) # -70445.1139161075 + 1782.88258899085*n - 8.49266875230215*n^2 + 0.625527509658961*n^3 + 0.151971794295052*n^4
+  seq_fit <- fit_poly(s, order = 5)
+  fit_plot(seq_fit$seq)
+  fit_eqn(seq_fit$fit) # 28591.7977545793 - 1209.15496315625*n + 12.4934753140499*n^2 + 0.569522570681622*n^3 + 0.152034815559452*n^4 - 2.52085057598749e-08*n^5
+  fit_error(seq_fit$fit)
 
-  # inspect visual fit
-  ggplot() + geom_point(data=dat, aes(x,y), size = 3) +
-    geom_line(data=data.frame(symbx=dat$x, symby=sapply(dat$x, symbreg)), aes(symbx, symby), colour = "red")
+
+  seq <- get_sequence("A331766")
+  s <- as_numbers(seq)
+
+  seq_fit <- fit_poly(s, order = 2)
+  fit_plot(seq_fit$seq)
+  fit_eqn(seq_fit$fit) # 1501146.96989487 - 156400.949968754*n + 2976.68614261186*n^2
+  fit_error(seq_fit$fit)
+  seq_fit <- fit_poly(s, order = 3)
+  fit_plot(seq_fit$seq)
+  fit_eqn(seq_fit$fit) # -239252.818153511 + 45376.6883871568*n - 1993.04483411109*n^2 + 32.8035047968512*n^3
+  fit_error(seq_fit$fit)
+  seq_fit <- fit_poly(s, order = 4)
+  fit_plot(seq_fit$seq)
+  fit_eqn(seq_fit$fit) # -686.038258128757 + 157.857283013931*n - 1.64876829875605*n^2 + 2.2354876332588*n^3 + 0.151326817641546*n^4
+  fit_error(seq_fit$fit)
+  seq_fit <- fit_poly(s, order = 5)
+  fit_plot(seq_fit$seq)
+  fit_eqn(seq_fit$fit) # 886.983876332387 - 278.919184435467*n + 28.0229085006176*n^2 + 1.45800677020328*n^3 + 0.159964860377899*n^4 - 3.42100702429828e-05*n^5
+  fit_error(seq_fit$fit)
+  seq_fit <- fit_poly(s, order = 6)
+  fit_plot(seq_fit$seq)
+  fit_eqn(seq_fit$fit) # -757.622809994296 + 342.863341573687*n - 31.7112670485136*n^2 + 3.79366400706562*n^3 + 0.116850011030541*n^4 + 0.000340667431843326*n^5 - 1.23721947883269e-06*n^6
+  fit_error(seq_fit$fit)
+  seq_fit <- fit_poly(s, order = 7)
+  fit_plot(seq_fit$seq)
+  fit_eqn(seq_fit$fit) # 298.709623649824 - 173.042263313864*n + 34.4062232921163*n^2 + 0.225118630249151*n^3 + 0.213103672496325*n^4 - 0.00102542497510938*n^5 + 8.51416455370411e-06*n^6 - 2.75852447879394e-08*n^7
+  fit_error(seq_fit$fit)
 
 
 })
